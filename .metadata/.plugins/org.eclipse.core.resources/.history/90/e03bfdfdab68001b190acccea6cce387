@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.devfun.settingweb_boot.dao.StatisticMapper">
+ 
+    <!-- 0. 해당년도의 로그인 수 -->
+    <select id="selectYearLogin" parameterType="string" resultType="hashMap">
+        select count(*) as totCnt  <!-- count(*) table의 전체 행 개수 가져오기 -->
+        from statistc.requestinfo ri <!-- requestinfo의 별칭 == ri (as 생략)-->
+        where left(ri.createDate, 2) = #{year} and requestCode = "L"; <!-- 코드가 L이어야 함 -->
+    </select>
+    
+    <!-- 1. 월별 접속자 수 -->
+    <select id="selectMonth" parameterType="string" resultType="hashMap">
+    	select count(*) as totCnt
+    	from statistc.requestinfo ri
+    	where mid(ri.createDate, 3, 2) = #{month};
+    </select>
+    
+    <!-- 2. 일자별 접속자 수-->
+    <select id="selectDate" parameterType="string" resultType="hashMap">
+    	select count(*) as totCnt
+    	from statistc.requestinfo ri
+    	where mid(ri.createDate, 5, 2) = #{date};
+    </select>
+    
+    <!-- 3. 평균 하루 로그인 수 -->
+    <select id="avgDay" parameterType="string" resultType="hashMap">
+    	select avg(loginCnt)
+		from (
+		select left(createDate, 2) as year,
+		       mid(createDate, 3, 2) as month,
+		       count(*) as 'loginCnt'
+		from statistc.requestinfo
+		group by year, month, date
+		) as a
+		where year = #{year} and month = #{month};
+    </select>
+    
+    <!-- 4. 해당월의 로그인 수 (휴일을 제외한 로그인 수)-->
+    <select id="selectmonthLogin" parameterType="string" resultType="hashMap">
+        select count(*) as totCnt 
+        from statistc.requestinfo ri 
+        where mid(ri.createDate, 3, 2) = #{month} and requestCode = "L"; 
+    </select>
+    
+    <!-- 5. 부서별 월별 로그인 수 -->
+     <select id="selectOrgLogin" parameterType="string" resultType="hashMap">
+     	select count(*) as totCnt
+    	from statistc.requestinfo ri
+    	where mid(ri.createDate, 3, 2) = #{month} and userID = #{organ};
+     </select>
+    
+</mapper>
+

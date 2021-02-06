@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.example.settingweb_boot.dao.StatisticMapper">
+ 
+ 	<!-- 해당년도의 로그인 수를 알기위한 쿼리 -->
+    <select id="selectYearLogin" parameterType="string" resultType="hashMap">
+        select count(*) as totCnt  <!-- count(*) table의 전체 행 개수 가져오기 -->
+        from statistc.requestinfo ri <!-- requestinfo의 별칭 == ri -->
+        where left(ri.createDate, 2) = #{year};
+    </select>
+    
+    <!-- 월별 접속자 수를 알기위한 쿼리 -->
+    <select id="selectMonthLogin" parameterType="string" resultType="hashMap">
+    	select count(*) as totCnt
+    	from statistc.requestinfo ri
+    	where mid(ri.createDate, 3, 2) = #{month};
+    </select>
+    
+    <!-- 일자별 접속자 수를 알기위한 쿼리 -->
+    <select id="selectDayLogin" parameterType="string" resultType="hashMap">
+    	select count(*) as totCnt
+    	from statistc.requestinfo ri
+    	where mid(ri.createDate, 5, 2) = #{day};
+    </select>
+    
+</mapper>
