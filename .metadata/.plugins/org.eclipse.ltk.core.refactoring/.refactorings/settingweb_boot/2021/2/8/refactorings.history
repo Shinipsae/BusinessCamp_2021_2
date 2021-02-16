@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;settingweb_boot/src/main/java/com/example/settingweb_boot/dao/statisticMapper.xml&apos; to &apos;StatisticMapper.xml&apos;" description="Rename resource &apos;statisticMapper.xml&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/java/com/example/settingweb_boot/dao/statisticMapper.xml" name="StatisticMapper.xml" stamp="1613389195711" updateReferences="true"/>
+</session>

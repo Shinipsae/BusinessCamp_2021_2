@@ -1,0 +1,13 @@
+package com.example.settingweb_boot.service;
+
+import java.util.HashMap;
+
+public interface StatisticService {
+	// 해당 년도의 로그인 수
+    public HashMap<String,Object> yearloginNum (String year);
+    public HashMap<String, Object> selectMonth(String yearMonth);
+    public HashMap<String, Object> selectDate(String date);
+    public HashMap<String, Object> avgDay(String year, String month);
+    public HashMap<String, Object> selectmonthLogin(String month);
+    public HashMap<String, Object> selectOrgLogin(String month);
+}

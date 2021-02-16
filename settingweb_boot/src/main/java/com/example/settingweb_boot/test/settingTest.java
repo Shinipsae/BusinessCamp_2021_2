@@ -1,8 +1,8 @@
 package com.example.settingweb_boot.test;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,15 +15,31 @@ import com.example.settingweb_boot.service.StatisticService;
 @Controller
 public class settingTest {
     
- 
     @Autowired
     private StatisticService service;
     
     @ResponseBody 
     @RequestMapping("/sqlyearStatistic")
-    public Map<String, Object> sqltest(String year) throws Exception{ 
-        
+    public LinkedHashMap<String, Object> sqltest(String year) throws Exception{  
         return service.yearloginNum(year);
+    }
+    
+    @ResponseBody 
+    @RequestMapping("/sqlmonthStatistic")
+    public LinkedHashMap<String, Object> getMonthCnt(String yearMonth) throws Exception{  
+        return service.selectMonth(yearMonth);
+    }
+    
+    @ResponseBody 
+    @RequestMapping("/sqldateStatistic")
+    public LinkedHashMap<String, Object> getDateCnt(String yearMonthDate) throws Exception{  
+        return service.selectDate(yearMonthDate);
+    }
+    
+    @ResponseBody 
+    @RequestMapping("/sqlavgStatistic")
+    public LinkedHashMap<String, Object> getAvgCnt(String yearMonth) throws Exception{  
+        return service.avgDay(yearMonth);
     }
     
     @RequestMapping("/test") 
