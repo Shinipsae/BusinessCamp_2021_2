@@ -25,7 +25,7 @@ public class StatisticServiceImpl implements StatisticService {
 			retVal.put("is_success", true);
 
 		} catch (Exception e) {
-			retVal.put("totCnt", -999);
+			retVal.put("loginCnt", -999);
 			retVal.put("year", year);
 			retVal.put("is_success", false);
 		}
@@ -49,7 +49,7 @@ public class StatisticServiceImpl implements StatisticService {
 			retVal.put("is_success", true);
 
 		} catch (Exception e) {
-			retVal.put("totCnt", -999);
+			retVal.put("monthCnt", -999);
 			retVal.put("year", year);
 			retVal.put("month", month);
 			retVal.put("is_success", false);
@@ -76,7 +76,7 @@ public class StatisticServiceImpl implements StatisticService {
 			retVal.put("is_success", true);
 
 		} catch (Exception e) {
-			retVal.put("totCnt", -999);
+			retVal.put("dateCnt", -999);
 			retVal.put("year", year);
 			retVal.put("month", month);
 			retVal.put("date", date);
@@ -86,12 +86,13 @@ public class StatisticServiceImpl implements StatisticService {
 		return retVal;
 	}
 
+	// 평균 하루 로그인 수 (월 기준)
 	@Override
 	public LinkedHashMap<String, Object> avgDay(String yearMonth) {
 		String year = yearMonth.substring(0, 2);
 		String month = yearMonth.substring(2);
 
-		// JSON을 만들기 위해 HashMap 형태로 return함
+		// JSON을 만들기 위해 (Linked)HashMap 형태로 return함
 		LinkedHashMap<String, Object> retVal = new LinkedHashMap<String, Object>();
 
 		try { // 쿼리로 가져온 cnt 값으로 json 값을 만듦
@@ -99,26 +100,41 @@ public class StatisticServiceImpl implements StatisticService {
 			retVal.put("year", year);
 			retVal.put("month", month);
 			retVal.put("is_success", true);
-			
-			// 월을 구해서 나눔
-			long total = (long)retVal.get("loginAvg");
-			switch (month) {
-				case "01": total /= 31.0; break;
-				case "02": total /= 28.0; break;
-				case "03": total /= 31.0; break;
-				case "04": total /= 30.0; break;
-				case "05": total /= 31.0; break;
-				case "06": total /= 30.0; break;
-				case "07": total /= 31.0; break;
-				case "08": total /= 31.0; break;
-				case "09": total /= 30.0; break;
-				case "10": total /= 31.0; break;
-				case "11": total /= 30.0; break;
-				case "12": total /= 31.0; break;
-				default: total = 0;
+
+			// 월을 구해서 나누어 평균을 구함
+			long total = (long) retVal.get("loginAvg");
+
+			if ((Integer.parseInt(year) + 2000) % 4 == 0) { // 윤년이면
+				month = "022";
 			}
-			
-			Object avg = (Object)total;
+
+			switch (month) {
+			case "01":
+			case "03":
+			case "05":
+			case "07":
+			case "08":
+			case "10":
+			case "12":
+				total /= 31.0;
+				break; // 31일인 달
+			case "04":
+			case "06":
+			case "09":
+			case "11":
+				total /= 30.0;
+				break; // 30일인 달
+			case "02":
+				total /= 28.0;
+				break; // 2월
+			case "022":
+				total /= 29.0;
+				break; // 윤년 2월은 29일
+			default:
+				total = 0;
+			}
+
+			Object avg = (Object) total;
 			retVal.put("loginAvg", avg);
 
 		} catch (Exception e) {
@@ -133,16 +149,56 @@ public class StatisticServiceImpl implements StatisticService {
 
 	}
 
+	// 휴일을 제외한 로그인 수 (월 기준)
 	@Override
-	public LinkedHashMap<String, Object> selectmonthLogin(String month) {
+	public LinkedHashMap<String, Object> selectphLogin(String yearMonth) {
+		String year = yearMonth.substring(0, 2);
+		String month = yearMonth.substring(2);
 
-		return null;
+		// JSON을 만들기 위해 HashMap 형태로 return 함
+		LinkedHashMap<String, Object> retVal = new LinkedHashMap<String, Object>();
+
+		try { // 쿼리로 가져온 cnt 값으로 json 값을 만듦
+			retVal = uMapper.selectphLogin(yearMonth);
+			retVal.put("year", year);
+			retVal.put("month", month);
+			retVal.put("is_success", true);
+
+		} catch (Exception e) {
+			retVal.put("monthCnt", -999);
+			retVal.put("year", year);
+			retVal.put("month", month);
+			retVal.put("is_success", false);
+		}
+
+		return retVal;
 	}
 
+	// 부서별 월별 로그인 수
 	@Override
-	public LinkedHashMap<String, Object> selectOrgLogin(String month) {
+	public LinkedHashMap<String, Object> selectOrgLogin(String yearMonth, String org) {
+		String year = yearMonth.substring(0, 2);
+		String month = yearMonth.substring(2);
 
-		return null;
+		// JSON을 만들기 위해 HashMap 형태로 return함
+		LinkedHashMap<String, Object> retVal = new LinkedHashMap<String, Object>();
+
+		try { // 쿼리로 가져온 cnt 값으로 json 값을 만듦
+			retVal = uMapper.selectOrgLogin(yearMonth, org);
+			retVal.put("year", year);
+			retVal.put("month", month);
+			retVal.put("org", org);
+			retVal.put("is_success", true);
+
+		} catch (Exception e) {
+			retVal.put("monthCnt", -999);
+			retVal.put("year", year);
+			retVal.put("month", month);
+			retVal.put("org", org);
+			retVal.put("is_success", false);
+		}
+
+		return retVal;
 	}
 
 }

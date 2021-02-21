@@ -8,6 +8,6 @@ public interface StatisticService {
     public LinkedHashMap<String, Object> selectMonth(String yearMonth);
     public LinkedHashMap<String, Object> selectDate(String yearMonthDate);
     public LinkedHashMap<String, Object> avgDay(String yearMonth);
-    public LinkedHashMap<String, Object> selectmonthLogin(String month);
-    public LinkedHashMap<String, Object> selectOrgLogin(String month);
+    public LinkedHashMap<String, Object> selectphLogin(String yearMonth);
+    public LinkedHashMap<String, Object> selectOrgLogin(String yearMonth, String org);
 }
